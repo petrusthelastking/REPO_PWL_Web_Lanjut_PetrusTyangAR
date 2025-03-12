@@ -11,13 +11,13 @@ class UserController extends Controller
 {
     public function index()
     {
-        $data = [
-            'level_id' => 2,
-            'username' => 'manager_tiga',
-            'nama' => 'Manager Tiga',
-            'password' => Hash::make('12345')
-        ];
-        UserModel::create($data);
+        // $data = [
+        //     'level_id' => 2,
+        //     'username' => 'manager_tiga',
+        //     'nama' => 'Manager Tiga',
+        //     'password' => Hash::make('12345')
+        // ];
+        // UserModel::create($data);
         //Menambahkan data baru menggunakan Eloquent
         // $data = [
         //     'username' => 'customer-1',
@@ -36,7 +36,17 @@ class UserController extends Controller
         // UserModel::where('username', 'customer-1')->update($data); //Merubah data yang sudah ada menggunakan Eloquent ORM
 
         //Mengambil semua data menggunakan Eloquent
-        $user = UserModel::all();
+        // $user = UserModel::all();
+        // $user = UserModel::find(1); //Mengambil data berdasarkan primary key
+        // $user = UserModel::where('level_id', 1)->first(); //Mengambil satu data pertama dari tabel yang memiliki level_id = 1 menggunakan Eloquent
+        // $user = UserModel::firstwhere('level_id', 1); //Mengambil data berdasarkan kolom tertentu
+        // $user = UserModel::findOr(1, ['username', 'nama'], function(){ //Mencari data pengguna dengan primary key tetapi dengan fallback (alternatif) jika data tidak ditemukan
+            //Jika data ditemukan, hanya kolom username dan nama yang akan diambil.
+        //     abort(404);
+        // });
+        $user = UserModel::findOr(20, ['username', 'nama'], function () {
+                abort(404);
+            });
         return view('user', ['data' => $user]);
     }
 }
