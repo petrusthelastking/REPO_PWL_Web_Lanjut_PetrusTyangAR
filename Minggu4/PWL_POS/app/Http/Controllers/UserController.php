@@ -49,9 +49,45 @@ class UserController extends Controller
         //     });
         // $user = UserModel::findOrFail(1); //Mencari data pengguna dengan primary key ID = 1 di dalam database, jika data tidak ditemukan maka akan menampilkan error 404 tanpa perlu menulis abort(404).
         // $user = UserModel::where('username', 'manager9')->firstOrFail(); //Mencari satu data pertama dalam database berdasarkan kriteria username = manager9, jika data tidak ditemukan maka akan menampilkan error 404 (Not Found) tanpa perlu pengecekan manual.
-        $user = UserModel::where('level_id',2)->count(); //Menghitung jumlah data dalam tabel users yang memiliki level_id = 2
+        // $user = UserModel::where('level_id',2)->count(); //Menghitung jumlah data dalam tabel users yang memiliki level_id = 2
          //Jika data ditemukan, Laravel mengembalikan data yang ada, Jika tidak ditemukan, Laravel akan menyimpan data baru ke database, lalu mengembalikan data tersebut.
         // dd($user); //Menampilkan hasilnya dengan dd()
+         //---------------------------------------------------Praktikum 2.4-------------------------------------------------------
+            //Mencari satu data pertama yang cocok berdasarkan kondisi
+            //Jika data ditemukan, Laravel mengembalikan data yang ada, Jika tidak ditemukan, Laravel akan menyimpan data baru ke database, lalu mengembalikan data tersebut.
+            // $user = UserModel::firstOrCreate(
+            //     [
+            //         'username' => 'manager',
+            //         'nama' => 'Manager'
+            //     ]
+            // );
+
+        // $user = UserModel::firstOrCreate(//Akan melakukan insert data, karena data pada kode ini belum ada di database
+            //     [
+            //         'username' => 'manager22',
+            //         'nama' => 'Manager Dua Dua',
+            //         'password' => Hash::make('12345'),
+            //         'level_id' => 2
+            //     ]
+            // );
+
+        // $user = UserModel::firstOrNew( //Digunakan untuk mencari data pertama berdasarkan kondisi yang diberikan. Jika data ditemukan, Laravel mengembalikan object model yang sudah ada.
+            //                                //Namun, jika data tidak ditemukan, Laravel akan membuat object model baru tetapi tidak langsung menyimpannya ke database. harus memanggil $model->save(); secara manual jika ingin menyimpannya.
+            //     [
+            //         'username' => 'manager',
+            //         'nama' => 'Manager'
+            //     ]
+            // );
+        
+        $user = UserModel::firstOrNew(
+                [
+                    'username' => 'manager33',
+                    'nama' => 'Manager Tiga Tiga',
+                    'password' => Hash::make('12345'),
+                    'level_id' => 2
+                ]
+            );
+            $user->save(); //Menyimpan data ke database
         return view('user', ['data' => $user]);
     }
 }
