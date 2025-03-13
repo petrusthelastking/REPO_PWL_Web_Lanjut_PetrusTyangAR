@@ -138,10 +138,16 @@ class UserController extends Controller
         //     $user->wasChanged(['username', 'level_id']); // true
         //     $user->wasChanged('nama'); // false
         //     dd($user->wasChanged(['nama', 'username'])); // true
-        //---------------------------------------------------------Praktikum 2.6--------------------------------------------------
-        $user = UserModel::all();
-            return view('user', ['data' => $user]);
-        }
+        // //---------------------------------------------------------Praktikum 2.6--------------------------------------------------
+        // $user = UserModel::all();
+        //     return view('user', ['data' => $user]);
+        // }
+
+         //---------------------------------------------------------Praktikum 2.7--------------------------------------------------
+         $user = UserModel::with('level')->get();
+         // dd($user);
+         return view('user', ['data' => $user]);
+ }
         public function tambah(){
             return view('user_tambah');
         }
