@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\DataTables\KategoriDataTable;
 use App\Models\KategoriModel;
 
+
 class KategoriController extends Controller
 {
    //Menambahkan atau Memasukkan data baru menggunakan Query Builder
@@ -36,6 +37,10 @@ class KategoriController extends Controller
     // public function index(KategoriDataTable $dataTable){
     //     return $dataTable->render('kategori.index');
     // }
+
+    public function index(KategoriDataTable $dataTable){
+        return $dataTable->render('kategori.index');
+    }
 
     public function create(){
         return view('kategori.create');
