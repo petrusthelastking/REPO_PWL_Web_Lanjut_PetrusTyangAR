@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WelcomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,3 +35,4 @@ Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('k
 Route::get('/kategori/create', [KategoriController::class, 'create']);
 Route::post('/kategori', [KategoriController::class, 'store']);
 Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
+Route::get('/', [WelcomeController::class, 'index']);
