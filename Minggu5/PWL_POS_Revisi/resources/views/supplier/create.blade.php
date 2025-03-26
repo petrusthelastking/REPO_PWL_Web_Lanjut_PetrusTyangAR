@@ -7,40 +7,40 @@
         <div class="card-tools"></div>
     </div>
     <div class="card-body">
-        <form method="POST" action="{{ url('kategori') }}" class="form-horizontal">
+        <form method="POST" action="{{ url('supplier') }}" class="form-horizontal">
             @csrf
 
-            <!-- Kode Kategori -->
+            <!-- Kode Supplier -->
             <div class="form-group row">
-                <label class="col-1 control-label col-form-label">Kode Kategori</label>
+                <label class="col-1 control-label col-form-label">Kode Supplier</label>
                 <div class="col-11">
-                    <input type="text" class="form-control" id="kode_kategori" name="kode_kategori"
-                           value="{{ old('kode_kategori') }}" required>
-                    @error('kode_kategori')
+                    <input type="text" class="form-control" id="supplier_kode" name="supplier_kode"
+                           value="{{ old('supplier_kode') }}" required>
+                    @error('supplier_kode')
                         <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
                 </div>
             </div>
 
-            <!-- Nama Kategori -->
+            <!-- Nama Supplier -->
             <div class="form-group row">
-                <label class="col-1 control-label col-form-label">Nama Kategori</label>
+                <label class="col-1 control-label col-form-label">Nama Supplier</label>
                 <div class="col-11">
-                    <input type="text" class="form-control" id="nama_kategori" name="nama_kategori"
-                           value="{{ old('nama_kategori') }}" required>
-                    @error('nama_kategori')
+                    <input type="text" class="form-control" id="supplier_nama" name="supplier_nama"
+                           value="{{ old('supplier_nama') }}" required>
+                    @error('supplier_nama')
                         <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
                 </div>
             </div>
 
-            <!-- Deskripsi Kategori -->
+            <!-- Alamat Supplier -->
             <div class="form-group row">
-                <label class="col-1 control-label col-form-label">Deskripsi Kategori</label>
+                <label class="col-1 control-label col-form-label">Alamat Supplier</label>
                 <div class="col-11">
-                    <input type="text" class="form-control" id="deskripsi" name="deskripsi"
-                           value="{{ old('deskripsi') }}" required>
-                    @error('deskripsi')
+                    <input type="text" class="form-control" id="supplier_alamat" name="supplier_alamat"
+                           value="{{ old('supplier_alamat') }}" required>
+                    @error('supplier_alamat')
                         <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
                 </div>
@@ -51,7 +51,7 @@
                 <label class="col-1 control-label col-form-label"></label>
                 <div class="col-11">
                     <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
-                    <a class="btn btn-sm btn-default ml-1" href="{{ url('kategori') }}">Kembali</a>
+                    <a class="btn btn-sm btn-default ml-1" href="{{ url('supplier') }}">Kembali</a>
                 </div>
             </div>
 
