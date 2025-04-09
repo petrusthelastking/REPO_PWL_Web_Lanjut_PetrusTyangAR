@@ -11,6 +11,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\AuthController; 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Http\Controllers\PenjualanController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -149,15 +150,11 @@ Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('kateg
 //     Route::delete('/{id}', [BarangController::class, 'destroy']);
 // });
 
-//-----------------------------------------------------------------------Jobsheet 7-------------------------------------------------------------------
+    //-----------------------------------------------------------------------Jobsheet 7-------------------------------------------------------------------
 Route::pattern('id', '[0-9]+'); // artinya ketika ada parameter {id}, maka harus berupa angka
-
-
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
-Route::post('logout', [AuthController::class, 'logout'])->middleware('auth');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
-// implementasi register
 Route::get('register', [AuthController::class, 'register'])->name('register');
 Route::post('register', [AuthController::class, 'postRegister']);
 
@@ -182,8 +179,13 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
             Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']);
             Route::get('/{id}/show_ajax', [LevelController::class, 'show_ajax']);
             Route::delete('/{id}', [LevelController::class, 'destroy']);
+            Route::get('/import', [LevelController::class, 'import']);
+            Route::post('/import_ajax', [LevelController::class, 'import_ajax']);
+            Route::get('/export_excel', [LevelController::class, 'export_excel']);
+            Route::get('/export_pdf', [LevelController::class, 'export_pdf']);
         });
     });
+
 
     Route::middleware(['authorize:CUS,MMG,STF'])->group(function(){ // artinya semua route di dalam group ini harus punya role ADM (Administrator) dan MNG (Manager) dan STF (Staff)
         Route::group(['prefix' => 'barang'], function () {
@@ -202,11 +204,19 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
             Route::delete('/{id}/delete_ajax', [BarangController::class, 'delete_ajax']);
             Route::get('/{id}/show_ajax', [BarangController::class, 'show_ajax']);
             Route::delete('/{id}', [BarangController::class, 'destroy']);
+            Route::get('/import', [BarangController::class, 'import']);
+            Route::post('/import_ajax', [BarangController::class, 'import_ajax']);
+            Route::get('/export_excel', [BarangController::class, 'export_excel']);
+            Route::get('/export_pdf', [BarangController::class, 'export_pdf']);
         });
     });
 
-    Route::middleware(['authorize:MMG'])->group(function(){ // artinya semua route di dalam group ini harus punya role ADM (Administrator)
-        Route::group(['prefix' => 'user'], function () {
+    Route::group(['prefix' => 'user'], function () {
+        Route::get('/profile', [UserController::class, 'profile']);
+        Route::get('/profile_ajax', [UserController::class, 'profile_ajax']);
+        Route::post('/profile_update', [UserController::class, 'profile_update']);
+        
+        Route::middleware(['authorize:MMG'])->group(function(){ // artinya semua route di dalam group ini harus punya role ADM (Administrator)
             Route::get('/', [UserController::class, 'index']);             // menampilkan halaman awal user
             Route::post('/list', [UserController::class, 'list']);        // menampilkan data user dalam bentuk json untuk datatables
             Route::get('/create', [UserController::class, 'create']);    // menampilkan halaman form tambah user
@@ -222,6 +232,10 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
             Route::delete('/{id}/delete_ajax', [UserController::class, 'delete_ajax']); // Untuk hapus data user Ajax
             Route::get('/{id}/show_ajax', [UserController::class, 'show_ajax']); // untuk menampilkan detail
             Route::delete('/{id}', [UserController::class, 'destroy']);  // menghapus data user
+            Route::get('/import', [UserController::class, 'import']);
+            Route::post('/import_ajax', [UserController::class, 'import_ajax']);
+            Route::get('/export_excel', [UserController::class, 'export_excel']);
+            Route::get('/export_pdf', [UserController::class, 'export_pdf']);
         });
     });
 
@@ -242,6 +256,10 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
             Route::delete('/{id}/delete_ajax', [SupplierController::class, 'delete_ajax']);
             Route::get('/{id}/show_ajax', [SupplierController::class, 'show_ajax']);
             Route::delete('/{id}', [SupplierController::class, 'destroy']);
+            Route::get('/import', [SupplierController::class, 'import']);
+            Route::post('/import_ajax', [SupplierController::class, 'import_ajax']);
+            Route::get('/export_excel', [SupplierController::class, 'export_excel']);
+            Route::get('/export_pdf', [SupplierController::class, 'export_pdf']);
         });
     });
 
@@ -262,10 +280,14 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
             Route::delete('/{id}/delete_ajax', [KategoriController::class, 'delete_ajax']);
             Route::get('/{id}/show_ajax', [KategoriController::class, 'show_ajax']);
             Route::delete('/{id}', [KategoriController::class, 'destroy']);
+            Route::get('/import', [KategoriController::class, 'import']);
+            Route::post('/import_ajax', [KategoriController::class, 'import_ajax']);
+            Route::get('/export_excel', [KategoriController::class, 'export_excel']);
+            Route::get('/export_pdf', [KategoriController::class, 'export_pdf']);
         });
     });
 
-    Route::middleware(['authorize:CUS,MNG,STF'])->group(function(){ // artinya semua route di dalam group ini harus punya role ADM (Administrator) dan MNG (Manager) dan STF (Staff)
+    Route::middleware(['authorize:CUS,MMG,STF'])->group(function(){ // artinya semua route di dalam group ini harus punya role ADM (Administrator) dan MNG (Manager) dan STF (Staff)
         Route::group(['prefix' => 'stok'], function () {
             Route::get('/', [StokController::class, 'index']);
             Route::post('/list', [StokController::class, 'list']);
@@ -282,10 +304,14 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
             Route::delete('/{id}/delete_ajax', [StokController::class, 'delete_ajax']);
             Route::get('/{id}/show_ajax', [StokController::class, 'show_ajax']);
             Route::delete('/{id}', [StokController::class, 'destroy']);
+            Route::get('/import', [StokController::class, 'import']);
+            Route::post('/import_ajax', [StokController::class, 'import_ajax']);
+            Route::get('/export_excel', [StokController::class, 'export_excel']);
+            Route::get('/export_pdf', [StokController::class, 'export_pdf']);
         });
     });
 
-    Route::middleware(['authorize:CUS,MNG,STF'])->group(function(){ // artinya semua route di dalam group ini harus punya role ADM (Administrator) dan MNG (Manager) dan STF (Staff)
+    Route::middleware(['authorize:CUS,MMG,STF'])->group(function(){ // artinya semua route di dalam group ini harus punya role ADM (Administrator) dan MNG (Manager) dan STF (Staff)
         Route::group(['prefix' => 'penjualan'], function () {
             Route::get('/', [PenjualanController::class, 'index']);
             Route::post('/list', [PenjualanController::class, 'list']);
