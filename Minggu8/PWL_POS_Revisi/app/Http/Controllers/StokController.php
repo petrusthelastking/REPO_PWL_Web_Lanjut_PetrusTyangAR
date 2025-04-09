@@ -379,4 +379,25 @@ class StokController extends Controller
         exit; //keluar dari scriptA
     }
 
+    public function export_pdf(){
+        $stok = StokModel::select(
+            'barang_id',
+            'user_id',
+            'supplier_id',
+            'stok_tanggal_masuk',
+            'stok_jumlah'
+        )
+        ->orderBy('barang_id')
+        ->orderBy('stok_tanggal_masuk')
+        ->with(['barang', 'user', 'supplier'])
+        ->get();
+
+        // use Barryvdh\DomPDF\Facade\Pdf;
+        $pdf = PDF::loadView('stok.export_pdf', ['stok' => $stok]);
+        $pdf->setPaper('A4', 'portrait'); // set ukuran kertas dan orientasi
+        $pdf->setOption("isRemoteEnabled", true); // set true jika ada gambar dari url
+        $pdf->render(); // render pdf
+
+        return $pdf->stream('Data Stock Barang '.date('Y-m-d H-i-s').'.pdf');
+    }
 }

@@ -20,8 +20,8 @@ class UserModel extends Authenticatable
 
     //=================================================================Jobsheet 4============================================================
     //Menambahkan variabel $fillable untuk mendaftarkan atribut (nama kolom) yang bisa diisi ketika melakukan insert atau update ke database.
-    protected $fillable = ['level_id', 'username', 'nama', 'password'];
-
+    protected $fillable = ['level_id', 'username', 'nama', 'password' , 'profile_photo']; //Menambahkan kolom profile_photo pada variabel $fillable, menandakan kolom profile_photo bisa diisi ketika melakukan insert atau update ke database.
+    
     //Menghilangkan kolom password pada variabel $fillable, menandakan variabel password tidak bisa diisi ketika melakukan insert atau update ke database.
     // protected $fillable = ['level_id', 'username', 'nama'];
 
