@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class UserModel extends Authenticatable
 {
@@ -30,7 +31,7 @@ class UserModel extends Authenticatable
 
      protected $casts = ['password' => 'hashed']; //casting password agar otomatis di hash
 
-    public function level(): BelongsTo //Menunjukkan bahwa setiap user memiliki relasi belongsTo dengan tabel LevelModel, dihubungkan melalui level_id.
+     public function level(): BelongsTo
     {
         return $this->belongsTo(LevelModel::class, 'level_id', 'level_id');
     }
@@ -51,4 +52,20 @@ class UserModel extends Authenticatable
         return $this->level->level_kode == $role;
     }
 
+    /**
+     * Mendapatkan kode role
+     */
+    public function getRole()
+    {
+        return $this->level->level_kode;
+    }
+
+
+    public function stok(): HasMany {
+        return $this->hasMany(StokModel::class, 'user_id', 'user_id');
+    }
+
+    public function penjualan(): HasMany {
+        return $this->hasMany(PenjualanModel::class, 'user_id', 'user_id');
+    }
 }
