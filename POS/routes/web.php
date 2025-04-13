@@ -7,6 +7,7 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,9 +39,20 @@ Route::get('/kategori/create', [KategoriController::class, 'create']);
 Route::post('/kategori', [KategoriController::class, 'store']);
 Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
 
-//--------------------------------------------Jobsheet 5--------------------------------
-Route::get('/', [WelcomeController::class, 'index']);
 
+Route::get('login', [AuthController::class, 'login'])->name('login');
+Route::post('login', [AuthController::class, 'postlogin']);
+Route::post('logout', [AuthController::class, 'logout'])->middleware('auth');
+Route::post('logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+// implementasi register
+Route::get('register', [AuthController::class, 'register'])->name('register');
+Route::post('register', [AuthController::class, 'postRegister']);
+
+Route::middleware(['auth'])->group(function () { // artinya semua route di dalam group ini harus login dulu
+    // masukkan semua route yang perlu autentikasi di sini
+    Route::get('/', [WelcomeController::class, 'index']);
+
+//--------------------------------------------Jobsheet 5--------------------------------
 Route::group(['prefix' => 'user'], function () {
     Route::get('/', [UserController::class, 'index']);             // menampilkan halaman awal user
     Route::post('/list', [UserController::class, 'list']);        // menampilkan data user dalam bentuk json untuk datatables
@@ -144,4 +156,5 @@ Route::group(['prefix' => 'barang'], function () {
     Route::delete('/{id}/delete_ajax', [BarangController::class, 'delete_ajax']);
     //--------------------------------------------------------------------------------------------------------------
     Route::delete('/{id}', [BarangController::class, 'destroy']);
+});
 });
