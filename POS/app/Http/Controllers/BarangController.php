@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\QueryException;
 
 class BarangController extends Controller
 {
@@ -58,6 +59,105 @@ class BarangController extends Controller
             })
             ->rawColumns(['aksi'])
             ->make(true);
+    }
+
+    public function show(string $id)
+    // Menampilkan detail barang (harga_jual dan harga_beli ikut ditampilkan)
+    {
+        // Gunakan with('kategori') agar bisa menampilkan info kategori di detail
+        $barang = BarangModel::with('kategori')->find($id);
+
+        $breadcrumb = (object) [
+            'title' => 'Detail Barang',
+            'list'  => ['Home', 'Barang', 'Detail']
+        ];
+
+        $page = (object) [
+            'title' => 'Detail barang'
+        ];
+
+        $activeMenu = 'barang';
+
+        return view('barang.show', [
+            'breadcrumb' => $breadcrumb,
+            'page'       => $page,
+            'barang'     => $barang,
+            'activeMenu' => $activeMenu
+        ]);
+    }
+
+    public function edit(string $id)
+    {
+        $barang = BarangModel::find($id);
+
+        // Ambil data kategori untuk select
+        $kategori = KategoriModel::all();
+
+        $breadcrumb = (object) [
+            'title' => 'Edit Barang',
+            'list'  => ['Home', 'Barang', 'Edit']
+        ];
+
+        $page = (object) [
+            'title' => 'Edit barang'
+        ];
+
+        $activeMenu = 'barang';
+
+        return view('barang.edit', [
+            'breadcrumb' => $breadcrumb,
+            'page'       => $page,
+            'barang'     => $barang,
+            'kategori'   => $kategori,
+            'activeMenu' => $activeMenu
+        ]);
+    }
+
+    // Menyimpan perubahan data barang
+    public function update(Request $request, string $id)
+    {
+        $request->validate([
+            'kategori_id'  => 'required|integer',
+            'barang_kode'  => 'required|string|max:10|unique:m_barang,barang_kode,'.$id.',barang_id',
+            'barang_nama'  => 'required|string|max:100',
+            'harga_beli'   => 'required|numeric',
+            'harga_jual'   => 'required|numeric',
+        ]);
+
+        $barang = BarangModel::find($id);
+        if (!$barang) {
+            return redirect('/barang')->with('error', 'Data barang tidak ditemukan');
+        }
+
+        $barang->update([
+            'kategori_id'  => $request->kategori_id,
+            'barang_kode'  => $request->barang_kode,
+            'barang_nama'  => $request->barang_nama,
+            'harga_beli'   => $request->harga_beli,
+            'harga_jual'   => $request->harga_jual,
+        ]);
+
+        return redirect('/barang')->with('success', 'Data barang berhasil diubah');
+    }
+
+    // Menghapus data barang
+    public function destroy(string $id)
+    {
+        $check = BarangModel::find($id);
+        if (!$check) {
+            return redirect('/barang')->with('error', 'Data barang tidak ditemukan');
+        }
+
+        try {
+            BarangModel::destroy($id);
+            return redirect('/barang')->with('success', 'Data barang berhasil dihapus');
+        } catch (QueryException $e) {
+            // Jika ada constraint foreign key, dsb.
+            return redirect('/barang')->with(
+                'error',
+                'Data barang gagal dihapus karena masih terdapat data lain yang terkait'
+            );
+        }
     }
 
     public function create_ajax()
@@ -166,6 +266,12 @@ class BarangController extends Controller
         }
 
         return redirect('/');
+    }
+
+    public function show_ajax(string $id){
+        $barang = BarangModel::with('kategori')->find($id);
+
+        return view('barang.show_ajax', ['barang' => $barang]);
     }
 
     public function import()
