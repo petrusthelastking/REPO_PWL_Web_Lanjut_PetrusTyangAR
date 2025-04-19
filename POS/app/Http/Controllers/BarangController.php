@@ -51,8 +51,8 @@ class BarangController extends Controller
         return DataTables::of($barang)
             ->addIndexColumn()
             ->addColumn('aksi', function ($barang) {
-                $btn = '<a href="'.url('/barang/'.$barang->barang_id).'" class="btn btn-info btn-sm">Detail</a>';
-                $btn .= ' <a href="'.url('/barang/'.$barang->barang_id.'/edit').'" class="btn btn-warning btn-sm">Edit</a>';
+                $btn = '<button type="button" onclick="modalAction(\''.url('/barang/'.$barang->barang_id.'/show_ajax').'\')" class="btn btn-info btn-sm">Detail</button>';
+                $btn .= '<button type="button" onclick="modalAction(\''.url('/barang/'.$barang->barang_id.'/edit_ajax').'\')" class="btn btn-warning btn-sm">edit</button>';
                 $btn .= ' <form method="POST" action="'.url('/barang/'.$barang->barang_id).'" style="display:inline-block">'.csrf_field().method_field('DELETE');
                 $btn .= '<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm(\'Apakah yakin ingin menghapus?\')">Hapus</button></form>';
                 return $btn;
@@ -195,13 +195,13 @@ class BarangController extends Controller
 
         return redirect('/');
     }
-
     public function edit_ajax($id)
-    {
-        $barang = BarangModel::find($id);
-        $level = LevelModel::select('level_id', 'level_nama')->get();
-        return view('barang.edit_ajax', ['barang' => $barang, 'level' => $level]);
-    }
+{
+    $barang = BarangModel::find($id);
+    $kategori = KategoriModel::all(); // <--- Tambahkan ini
+
+    return view('barang.edit_ajax', compact('barang', 'kategori'));
+}
 
     public function update_ajax(Request $request, $id)
     {
