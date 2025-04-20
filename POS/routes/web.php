@@ -10,6 +10,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StokController;
 use App\Http\Controllers\PenjualanController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,7 @@ Route::post('/kategori', [KategoriController::class, 'store']);
 Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
 
 
+
 Route::pattern('id', '[0-9]+'); // artinya ketika ada parameter {id}, maka harus berupa angka
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
@@ -52,6 +54,10 @@ Route::post('register', [AuthController::class, 'postRegister']);
 Route::middleware(['auth'])->group(function () { // artinya semua route di dalam group ini harus login dulu
     // masukkan semua route yang perlu autentikasi di sini
     Route::get('/', [WelcomeController::class, 'index']);
+    Route::get('/', [DashboardController::class,'index'])
+     ->middleware('auth')
+     ->name('dashboard');
+
 
     Route::middleware(['authorize:ADM'])->group(function(){ // artinya semua route di dalam group ini harus punya role ADM (Administrator)
         Route::group(['prefix' => 'level'], function () {

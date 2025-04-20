@@ -86,6 +86,8 @@ class BarangController extends Controller
         ]);
     }
 
+    
+
     public function edit(string $id)
     {
         $barang = BarangModel::find($id);
@@ -162,39 +164,40 @@ class BarangController extends Controller
 
     public function create_ajax()
     {
-        $kategori = KategoriModel::select('kategori_id', 'kategori_nama')->get();
+        $kategori = KategoriModel::all();
         return view('barang.create_ajax')->with('kategori', $kategori);
     }
 
     public function store_ajax(Request $request)
-    {
-        if ($request->ajax() || $request->wantsJson()) {
-            $rules = [
-                'kategori_id' => ['required', 'integer', 'exists:kategori,kategori_id'],
-                'barang_kode' => ['required', 'min:3', 'max:20', 'unique:m_barang,barang_kode'],
-                'barang_nama' => ['required', 'string', 'max:100'],
-                'harga_beli' => ['required', 'numeric'],
-                'harga_jual' => ['required', 'numeric'],
-            ];
+{
+    if ($request->ajax()) {
+        $rules = [
+            'kategori_id' => ['required', 'integer', 'exists:m_kategori,kategori_id'], // ← table is m_kategori
+            'barang_kode' => ['required','string','min:3','max:20','unique:m_barang,barang_kode'],
+            'barang_nama' => ['required','string','max:100'],
+            'harga_beli'  => ['required','numeric'],
+            'harga_jual'  => ['required','numeric'],
+        ];
 
-            $validator = Validator::make($request->all(), $rules);
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Validasi Gagal.',
-                    'msgField' => $validator->errors()
-                ]);
-            }
-
-            BarangModel::create($request->all());
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
             return response()->json([
-                'status' => true,
-                'message' => 'Data berhasil disimpan'
-            ]);
+                'status'   => false,
+                'message'  => 'Validasi Gagal.',
+                'msgField' => $validator->errors(),
+            ], 422);
         }
 
-        return redirect('/');
+        BarangModel::create($request->only(['kategori_id','barang_kode','barang_nama','harga_beli','harga_jual']));
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Data berhasil disimpan',
+        ]);
     }
+
+    return abort(404);
+}
     public function edit_ajax($id)
 {
     $barang = BarangModel::find($id);
@@ -202,6 +205,7 @@ class BarangController extends Controller
 
     return view('barang.edit_ajax', compact('barang', 'kategori'));
 }
+
 
     public function update_ajax(Request $request, $id)
     {

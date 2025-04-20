@@ -60,8 +60,8 @@
                     <!-- Penjualan Tanggal -->
                     <div class="form-group">
                         <label>Penjualan Tanggal</label>
-                        <input type="datetime-local" name="penjualan_tanggal" id="penjualan_tanggal" class="form-control" value="{{ old('penjualan_tanggal', date('Y-m-d\TH:i', strtotime($penjualan->penjualan_tanggal))) }}" required>
-                        <small id="error-penjualan_tanggal" class="error-text form-text text-danger"></small>
+                        <input type="datetime-local" name="tanggal_penjualan" id="tanggal_penjualan" class="form-control" value="{{ old('tanggal_penjualan', date('Y-m-d\TH:i', strtotime($penjualan->tanggal_penjualan))) }}" required>
+                        <small id="error-tanggal_penjualan" class="error-text form-text text-danger"></small>
                     </div>
                 </div>
 
@@ -90,7 +90,7 @@
                         minlength: 3,
                         maxlength: 20
                     },
-                    penjualan_tanggal: {
+                    tanggal_penjualan: {
                         required: true,
                         date: true
                     }

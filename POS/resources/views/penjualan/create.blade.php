@@ -55,8 +55,8 @@
             <div class="form-group row">
                 <label class="col-1 control-label col-form-label">Tanggal Penjualan</label>
                 <div class="col-11">
-                    <input type="datetime-local" class="form-control" id="penjualan_tanggal" name="penjualan_tanggal" value="{{ old('penjualan_tanggal') }}" required>
-                    @error('penjualan_tanggal')
+                    <input type="datetime-local" class="form-control" id="tanggal_penjualan" name="tanggal_penjualan" value="{{ old('tanggal_penjualan') }}" required>
+                    @error('tanggal_penjualan')
                         <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
                 </div>

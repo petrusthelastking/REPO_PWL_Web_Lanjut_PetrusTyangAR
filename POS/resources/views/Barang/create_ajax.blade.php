@@ -47,61 +47,28 @@
     </div>
 </form>
 <script>
-    $(document).ready(function() {
-        $("#form-tambah").validate({
-            rules: {
-                kategori_id: {
-                    required: true,
-                    number: true
-                },
-                barang_kode: {
-                    required: true,
-                    minlength: 3,
-                    maxlength: 10
-                },
-                barang_nama: {
-                    required: true,
-                    minlength: 3,
-                    maxlength: 100
-                },
-                harga_beli: {
-                    required: true,
-                    minlength: 3
-                },
-                harga_jual: {
-                    required: true,
-                    minlength: 3
-                }
-            },
-            submitHandler: function(form) {
-                $.ajax({
-                    url: form.action,
-                    type: form.method,
-                    data: $(form).serialize(),
-                    success: function(response) {
-                        if (response.status) {
-                            $('#myModal').modal('hide');
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil',
-                                text: response.message
-                            });
-                            dataBarang.ajax.reload();
-                        } else {
-                            $('.error-text').text('');
-                            $.each(response.msgField, function(prefix, val) {
-                                $('#error-' + prefix).text(val[0]);
-                            });
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Terjadi Kesalahan',
-                                text: response.message
-                            });
-                        }
-                    }
-                });
-                return false;
-            },
+    $("#form-tambah").validate({
+      submitHandler(form) {
+        $.ajax({
+          url: form.action,
+          type: form.method,
+          data: $(form).serialize(),
+          success(response) {
+            if (response.status) {
+              $('#myModal').modal('hide');
+              Swal.fire('Berhasil', response.message, 'success');
+              tableBarang.ajax.reload();    // ← reload the DataTable by its actual name
+            } else {
+              $('.error-text').text('');
+              $.each(response.msgField, (field, msgs) => {
+                $('#error-' + field).text(msgs[0]);
+              });
+              Swal.fire('Error', response.message, 'error');
+            }
+          },
+        });
+        return false;
+      },
             errorElement: 'span',
             errorPlacement: function(error, element) {
                 error.addClass('invalid-feedback');
@@ -114,5 +81,4 @@
                 $(element).removeClass('is-invalid');
             }
         });
-    });
 </script>

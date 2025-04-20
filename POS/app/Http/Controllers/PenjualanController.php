@@ -129,7 +129,7 @@ class PenjualanController extends Controller
             'user_id' => $request->user_id,
             'pembeli' => $request->pembeli,
             'penjualan_kode' => $request->penjualan_kode,
-            'penjualan_tanggal' => $request->penjualan_tanggal,
+            'tanggal_penjualan' => $request->tanggal_penjualan,
         ]);
 
         return redirect('/penjualan');
@@ -149,7 +149,7 @@ class PenjualanController extends Controller
         $penjualan->user_id = $request->user_id;
         $penjualan->pembeli = $request->pembeli;
         $penjualan->penjualan_kode = $request->penjualan_kode;
-        $penjualan->penjualan_tanggal = $request->penjualan_tanggal;
+        $penjualan->tanggal_penjualan = $request->tanggal_penjualan;
 
         $penjualan->save();
 
@@ -240,14 +240,14 @@ class PenjualanController extends Controller
             'user_id'          => 'required|integer',
             'pembeli'          => 'required|string|max:100',
             'penjualan_kode'   => 'required|string|max:20|unique:t_penjualan,penjualan_kode',
-            'penjualan_tanggal'=> 'required|date',
+            'tanggal_penjualan'=> 'required|date',
         ]);
 
         PenjualanModel::create([
             'user_id'          => $request->user_id,
             'pembeli'          => $request->pembeli,
             'penjualan_kode'   => $request->penjualan_kode,
-            'penjualan_tanggal'=> $request->penjualan_tanggal,
+            'tanggal_penjualan'=> $request->tanggal_penjualan,
         ]);
 
         return redirect('/penjualan')->with('success', 'Data penjualan berhasil disimpan');
@@ -316,7 +316,7 @@ class PenjualanController extends Controller
             'user_id'          => 'required|integer',
             'pembeli'          => 'required|string|max:100',
             'penjualan_kode'   => 'required|string|max:20|unique:t_penjualan,penjualan_kode,'.$id.',penjualan_id',
-            'penjualan_tanggal'=> 'required|date',
+            'tanggal_penjualan'=> 'required|date',
         ]);
 
         $penjualan = PenjualanModel::find($id);
@@ -328,7 +328,7 @@ class PenjualanController extends Controller
             'user_id'          => $request->user_id,
             'pembeli'          => $request->pembeli,
             'penjualan_kode'   => $request->penjualan_kode,
-            'penjualan_tanggal'=> $request->penjualan_tanggal,
+            'tanggal_penjualan'=> $request->tanggal_penjualan,
         ]);
 
         return redirect('/penjualan')->with('success', 'Data penjualan berhasil diubah');
@@ -369,11 +369,11 @@ class PenjualanController extends Controller
             'user_id'           => ['required', 'integer'],
             'pembeli'           => ['required', 'string', 'max:100'],
             'penjualan_kode'    => ['required', 'string', 'max:20', 'unique:t_penjualan,penjualan_kode'],
-            'penjualan_tanggal' => ['required', 'date'],
+            'tanggal_penjualan' => ['required', 'date'],
             'details'           => ['required', 'array', 'min:1'],
             'details.*.barang_id' => ['required', 'integer'],
-            'details.*.jumlah'    => ['required', 'integer', 'min:1'],
-            'details.*.harga'     => ['required', 'numeric'],
+            'details.*.jumlah_barang'    => ['required', 'integer', 'min:1'],
+            'details.*.harga_barang'     => ['required', 'numeric'],
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -389,7 +389,7 @@ class PenjualanController extends Controller
         DB::beginTransaction();
         try {
             $penjualan = PenjualanModel::create($request->only([
-                'user_id', 'pembeli', 'penjualan_kode', 'penjualan_tanggal'
+                'user_id', 'pembeli', 'penjualan_kode', 'tanggal_penjualan'
             ]));
 
             foreach ($request->details as $index => $detail) {
@@ -403,7 +403,7 @@ class PenjualanController extends Controller
                     ]);
                 }
 
-                if ($detail['jumlah'] > $stokBarang->stok_jumlah) {
+                if ($detail['jumlah_barang'] > $stokBarang->stok_jumlah) {
                     DB::rollBack();
                     return response()->json([
                         'status'  => false,
@@ -411,14 +411,14 @@ class PenjualanController extends Controller
                     ]);
                 }
 
-                $stokBarang->stok_jumlah -= $detail['jumlah'];
+                $stokBarang->stok_jumlah -= $detail['jumlah_barang'];
                 $stokBarang->save();
 
                 PenjualanDetailModel::create([
                     'penjualan_id' => $penjualan->penjualan_id,
                     'barang_id'    => $detail['barang_id'],
-                    'jumlah'       => $detail['jumlah'],
-                    'harga'        => $detail['harga'],
+                    'jumlah_barang'       => $detail['jumlah_barang'],
+                    'harga_barang'        => $detail['harga_barang'],
                 ]);
             }
 

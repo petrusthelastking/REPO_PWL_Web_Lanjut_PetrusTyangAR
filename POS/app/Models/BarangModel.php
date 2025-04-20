@@ -13,6 +13,7 @@ class BarangModel extends Model
 
     protected $table = 'm_barang';
     protected $primaryKey = 'barang_id';
+    public $timestamps = true; // karena kamu punya timestamps di migration
 
     protected $fillable = ['kategori_id', 'barang_kode', 'barang_nama', 'harga_jual', 'harga_beli'];
 
@@ -27,4 +28,5 @@ class BarangModel extends Model
     public function penjualanDetail(): HasMany {
         return $this->hasMany(PenjualanDetailModel::class, 'barang_id', 'barang_id');
     }
+    
 }

@@ -53,7 +53,7 @@
                         </tr>
                         <tr>
                             <th>Tanggal Penjualan</th>
-                            <td>{{ \Carbon\Carbon::parse($penjualan->penjualan_tanggal)->translatedFormat('d F Y H:i:s') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($penjualan->tanggal_penjualan)->translatedFormat('d F Y H:i:s') }}</td>
                         </tr>
                     </table>
                     <!-- Detail penjualan -->

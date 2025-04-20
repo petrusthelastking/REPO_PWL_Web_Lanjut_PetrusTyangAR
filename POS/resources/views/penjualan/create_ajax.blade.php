@@ -37,8 +37,8 @@
 
                 <div class="form-group">
                     <label>Tanggal Penjualan</label>
-                    <input type="datetime-local" name="penjualan_tanggal" id="penjualan_tanggal" class="form-control" required>
-                    <small id="error-penjualan_tanggal" class="error-text form-text text-danger"></small>
+                    <input type="datetime-local" name="tanggal_penjualan" id="tanggal_penjualan" class="form-control" required>
+                    <small id="error-tanggal_penjualan" class="error-text form-text text-danger"></small>
                 </div>
 
                 <!-- Bagian Detail Penjualan -->
@@ -90,12 +90,12 @@ $(document).ready(function(){
                 <span class="stok-text">0</span>
             </td>
             <td>
-                <input type="number" name="details[${detailIndex}][jumlah]" class="form-control jumlah-input" required min="1">
+                <input type="number" name="details[${detailIndex}][jumlah_barang]" class="form-control jumlah-input" required min="1">
                 <small class="error-text form-text text-danger" id="error-details_${detailIndex}_jumlah"></small>
             </td>
             <td>
-                <input type="text" name="details[${detailIndex}][harga]" class="form-control harga-input" readonly required>
-                <small class="error-text form-text text-danger" id="error-details_${detailIndex}_harga"></small>
+                <input type="text" name="details[${detailIndex}][harga_barang]" class="form-control harga-input" readonly required>
+                <small class="error-text form-text text-danger" id="error-details_${detailIndex}_harga_barang"></small>
             </td>
             <td>
                 <button type="button" class="btn btn-danger removeDetail">Hapus</button>
@@ -112,7 +112,7 @@ $(document).ready(function(){
     $('#detailTable').on('change', '.barang-select', function(){
         var selectedOption = $(this).find(':selected');
         var stok = selectedOption.data('stok') || 0;
-        var harga = parseFloat(selectedOption.data('harga')) || 0;
+        var harga = parseFloat(selectedOption.data('harga_barang')) || 0;
         var row = $(this).closest('tr');
         row.find('.stok-text').text(stok);
 
@@ -137,7 +137,7 @@ $(document).ready(function(){
             user_id: { required: true, number: true },
             pembeli: { required: true, minlength: 3, maxlength: 100 },
             penjualan_kode: { required: true, minlength: 3, maxlength: 20 },
-            penjualan_tanggal: { required: true, date: true }
+            tanggal_penjualan: { required: true, date: true }
         },
         submitHandler: function(form) {
             $.ajax({
