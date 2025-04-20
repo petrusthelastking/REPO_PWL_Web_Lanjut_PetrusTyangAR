@@ -438,13 +438,18 @@ class PenjualanController extends Controller
     }
 
     public function show_ajax($id)
-    {
-        $penjualan = PenjualanModel::with(['user', 'penjualanDetail.barang'])->find($id);
+{
+    $penjualan = PenjualanModel::with(['user', 'penjualanDetail.barang'])->find($id);
 
-        $penjualanDetail = $penjualan->penjualanDetail;
-
-        return view('penjualan.show_ajax', ['penjualanDetail' => $penjualanDetail]);
+    if (!$penjualan) {
+        return response()->json(['error' => 'Penjualan not found'], 404);
     }
+
+    return view('penjualan.show_ajax', [
+        'penjualan' => $penjualan,
+        'penjualanDetail' => $penjualan->penjualanDetail
+    ]);
+}
 
     public function confirm_ajax($id)
     {

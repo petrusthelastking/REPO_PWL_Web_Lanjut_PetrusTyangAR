@@ -72,69 +72,74 @@
     </form>
     <script>
         $(document).ready(function() {
-            $("#form-edit").validate({
-                rules: {
-                    kategori_id: {
-                        required: true,
-                        number: true
-                    },
-                    barang_nama: {
-                        required: true,
-                        minlength: 3,
-                        maxlength: 20
-                    },
-                    harga_beli: {
+        $("#form-edit").validate({
+            rules: {
+                kategori_id: {
+                    required: true,
+                    number: true
+                },
+                barang_kode: {  // Tambahkan validasi untuk barang_kode
+                    required: true,
+                    minlength: 3,
+                    maxlength: 20
+                },
+                barang_nama: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 20
+                },
+                harga_beli: {
                     required: true,
                     number: true,
                     min: 0
-                    },
-                    harga_jual: {
-                        required: true,
-                        number: true,
-                        min: 0
-                    }
                 },
-                submitHandler: function(form) {
-                    $.ajax({
-                        url: form.action,
-                        type: form.method,
-                        data: $(form).serialize(),
-                        success: function(response) {
-                            if (response.status) {
-                                $('#myModal').modal('hide');
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Berhasil',
-                                    text: response.message
-                                });
-                                dataBarang.ajax.reload();
-                            } else {
-                                $('.error-text').text('');
-                                $.each(response.msgField, function(prefix, val) {
-                                    $('#error-' + prefix).text(val[0]);
-                                });
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Terjadi Kesalahan',
-                                    text: response.message
-                                });
-                            }
-                        }
-                    });
-                    return false;
-                },
-                errorElement: 'span',
-                errorPlacement: function(error, element) {
-                    error.addClass('invalid-feedback');
-                    element.closest('.form-group').append(error);
-                },
-                highlight: function(element, errorClass, validClass) {
-                    $(element).addClass('is-invalid');
-                },
-                unhighlight: function(element, errorClass, validClass) {
-                    $(element).removeClass('is-invalid');
+                harga_jual: {
+                    required: true,
+                    number: true,
+                    min: 0
                 }
-            });
+            },
+            submitHandler: function(form) {
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: $(form).serialize(),
+                    success: function(response) {
+                        if (response.status) {
+                            $('#modal-master').modal('hide'); // Ganti ID modal
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: response.message
+                            });
+                            $('#myTable').DataTable().ajax.reload(); // Perbaikan di sini
+                        } else {
+                            $('.error-text').text('');
+                            $.each(response.msgField, function(prefix, val) {
+                                $('#error-' + prefix).text(val[0]);
+                            });
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi Kesalahan',
+                                text: response.message
+                            });
+                        }
+                    }
+                });
+                return false;
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
         });
-    </script>
+    });
+</script>
 @endempty

@@ -55,7 +55,7 @@
                     </tr>
                     <tr>
                         <th>Tanggal Penjualan</th>
-                        <td>{{ \Carbon\Carbon::parse($header->penjualan_tanggal)->translatedFormat('d F Y \ H:i:s') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($header->tanggal_penjualan)->translatedFormat('d F Y \ H:i:s') }}</td>
                     </tr>
                 </table>
 
@@ -74,7 +74,7 @@
                         <tr>
                             <td>{{ $detail->detail_id }}</td>
                             <td>{{ $detail->barang->barang_nama }}</td>
-                            <td>{{ $detail->jumlah }}</td>
+                            <td>{{ $detail->jumlah_barang }}</td>
                             <td>{{ 'Rp' . number_format($detail->harga, 0, ',', '.') }}</td>
                         </tr>
                         @endforeach
