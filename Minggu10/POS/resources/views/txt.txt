@@ -1,0 +1,173 @@
+@extends('layouts.template')
+
+@section('content')
+  {{-- Kartu sambutan --}}
+  <div class="card mb-4">
+    <div class="card-header">
+      <h3 class="card-title">Halo, apa kabar!!!</h3>
+      <div class="card-tools"></div>
+    </div>
+    <div class="card-body">
+      Selamat datang semua, ini adalah halaman utama dari aplikasi ini.
+    </div>
+  </div>
+
+  {{-- Ringkasan data --}}
+  <div class="row">
+    {{-- Users --}}
+    <div class="col-lg-3 col-6">
+      <div class="small-box bg-info">
+        <div class="inner">
+          <h3>{{ $userCount }}</h3>
+          <p>Data User</p>
+        </div>
+        <div class="icon"><i class="fas fa-users"></i></div>
+        <a href="{{ url('user') }}" class="small-box-footer">
+          Selengkapnya <i class="fas fa-arrow-circle-right"></i>
+        </a>
+      </div>
+    </div>
+
+    {{-- Levels --}}
+    <div class="col-lg-3 col-6">
+      <div class="small-box bg-success">
+        <div class="inner">
+          <h3>{{ $levelCount }}</h3>
+          <p>Level User</p>
+        </div>
+        <div class="icon"><i class="fas fa-layer-group"></i></div>
+        <a href="{{ url('level') }}" class="small-box-footer">
+          Selengkapnya <i class="fas fa-arrow-circle-right"></i>
+        </a>
+      </div>
+    </div>
+
+    {{-- Categories --}}
+    <div class="col-lg-3 col-6">
+      <div class="small-box bg-warning">
+        <div class="inner">
+          <h3>{{ $kategoriCount }}</h3>
+          <p>Kategori Barang</p>
+        </div>
+        <div class="icon"><i class="fas fa-bookmark"></i></div>
+        <a href="{{ url('kategori') }}" class="small-box-footer">
+          Selengkapnya <i class="fas fa-arrow-circle-right"></i>
+        </a>
+      </div>
+    </div>
+
+    {{-- Products --}}
+    <div class="col-lg-3 col-6">
+      <div class="small-box bg-danger">
+        <div class="inner">
+          <h3>{{ $barangCount }}</h3>
+          <p>Data Barang</p>
+        </div>
+        <div class="icon"><i class="fas fa-list-alt"></i></div>
+        <a href="{{ url('barang') }}" class="small-box-footer">
+          Selengkapnya <i class="fas fa-arrow-circle-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {{-- Stok & Penjualan --}}
+  <div class="row">
+    <div class="col-lg-6 col-12">
+      <div class="small-box bg-primary">
+        <div class="inner">
+          <h3>{{ $stokCount }}</h3>
+          <p>Stok Barang</p>
+        </div>
+        <div class="icon"><i class="fas fa-cubes"></i></div>
+        <a href="{{ url('stok') }}" class="small-box-footer">
+          Selengkapnya <i class="fas fa-arrow-circle-right"></i>
+        </a>
+      </div>
+    </div>
+
+    <div class="col-lg-6 col-12">
+      <div class="small-box bg-secondary">
+        <div class="inner">
+          <h3>{{ $penjualanCount }}</h3>
+          <p>Transaksi Penjualan</p>
+        </div>
+        <div class="icon"><i class="fas fa-cash-register"></i></div>
+        <a href="{{ url('penjualan') }}" class="small-box-footer">
+          Selengkapnya <i class="fas fa-arrow-circle-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {{-- Grafik --}}
+  <div class="row">
+    {{-- Penjualan 7 Hari --}}
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Penjualan 7 Hari Terakhir</h3>
+        </div>
+        <div class="card-body">
+          <canvas id="salesChart" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+
+    {{-- Distribusi Kategori --}}
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Distribusi Kategori</h3>
+        </div>
+        <div class="card-body">
+          <canvas id="kategoriChart" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+@endsection
+
+@push('scripts')
+<script>
+  // Ambil data dari PHP
+  const labels        = @json($labels);
+  const dataSales     = @json($dataSales);
+  const kategoriLabels= @json($kategoriLabels);
+  const kategoriCounts= @json($kategoriCounts);
+
+  // Chart penjualan (line)
+  new Chart($('#salesChart'), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Jumlah Penjualan',
+        data: dataSales,
+        fill: false,
+        tension: 0.4,
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true, precision: 0 }
+      }
+    }
+  });
+
+  // Chart kategori (pie)
+  new Chart($('#kategoriChart'), {
+    type: 'pie',
+    data: {
+      labels: kategoriLabels,
+      datasets: [{
+        data: kategoriCounts,
+        borderWidth: 1
+      }]
+    },
+    options: { responsive: true }
+  });
+</script>
+@endpush
