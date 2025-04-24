@@ -208,7 +208,7 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
         });
     });
 
-    Route::middleware(['authorize:ADM,MMG,STF'])->group(function(){ // artinya semua route di dalam group ini harus punya role ADM (Administrator) dan MNG (Manager) dan STF (Staff)
+    Route::middleware(['authorize:ADM,MMG,STF,CUS'])->group(function(){ // artinya semua route di dalam group ini harus punya role ADM (Administrator) dan MNG (Manager) dan STF (Staff)
         Route::group(['prefix' => 'penjualan'], function () {
             Route::get('/', [PenjualanController::class, 'index']);
             Route::post('/list', [PenjualanController::class, 'list']);
@@ -225,6 +225,10 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
             Route::delete('/{id}/delete_ajax', [PenjualanController::class, 'delete_ajax']);
             Route::get('/{id}/show_ajax', [PenjualanController::class, 'show_ajax']);
             Route::delete('/{id}', [PenjualanController::class, 'destroy']);
+            Route::get('/import', [PenjualanController::class, 'import']);
+            Route::post('/import_ajax', [PenjualanController::class, 'import_ajax']);
+            Route::get('/export_excel', [PenjualanController::class, 'export_excel']);
+            Route::get('/export_pdf', [PenjualanController::class, 'export_pdf']);
         });
     });
 // //--------------------------------------------Jobsheet 5--------------------------------

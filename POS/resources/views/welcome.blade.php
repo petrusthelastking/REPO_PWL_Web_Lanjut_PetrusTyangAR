@@ -22,16 +22,6 @@
 @extends('layouts.template')
 
 @section('content')
-  {{-- Kartu sambutan --}}
-  <div class="card mb-4">
-    <div class="card-header">
-      <h3 class="card-title">Halo, apa kabar!!!</h3>
-    </div>
-    <div class="card-body">
-      Selamat datang semua, ini adalah halaman utama dari aplikasi ini.
-    </div>
-  </div>
-
   {{-- Ringkasan data --}}
   <div class="row">
     <div class="col-lg-3 col-6">
